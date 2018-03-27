@@ -2,13 +2,14 @@ import requests
 import tkinter
 
 
-def get_JSON(code_postal): #à un code postal donné retourné le JSON associé
-    r = requests.get("http://api.openweathermap.org/data/2.5/weather?zip="+str(code_postal)+",fr&APPID=f856c4048fc25d7f6fd4e7843d31376b&lang=fr")
+def get_JSON(code_postal):  # à un code postal donné retourné le JSON associé
+    r = requests.get("http://api.openweathermap.org/data/2.5/weather?zip="+str(code_postal) +
+                     ",fr&APPID=f856c4048fc25d7f6fd4e7843d31376b&lang=fr")
     json = r.json()
     return json
 
 
-def convert_Kelvin_to_Celsius(temp): #convertit les températures de K° vers C°
+def convert_Kelvin_to_Celsius(temp):  # convertit les températures de K° vers C°
     return round(temp - 273.15, 1)
 
 
@@ -21,7 +22,7 @@ def get_weather_data(code_postal):
     temperature = convert_Kelvin_to_Celsius(r['main']['temp'])
     pression = r['main']['pressure']
     humidité = r['main']['humidity']
-    vitesse_vent = int(3.6*r['wind']['speed']) #convertit les m/s en km/h
+    vitesse_vent = int(3.6*r['wind']['speed'])  # convertit les m/s en km/h
     ville = r['name']
     image_temps = r['weather'][0]['icon']
     return ville, list_of_weatehers_in_french, temperature, pression, humidité, vitesse_vent, image_temps
