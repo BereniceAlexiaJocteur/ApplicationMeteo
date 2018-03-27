@@ -23,7 +23,8 @@ def get_weather_data(code_postal):
     humidité = r['main']['humidity']
     vitesse_vent = int(3.6*r['wind']['speed']) #convertit les m/s en km/h
     ville = r['name']
-    return ville, list_of_weatehers_in_french, temperature, pression, humidité, vitesse_vent
+    image_temps = r['weather'][0]['icon']
+    return ville, list_of_weatehers_in_french, temperature, pression, humidité, vitesse_vent, image_temps
 
 
 def mise_en_forme_data(meteo_tuple):
@@ -37,15 +38,26 @@ def mise_en_forme_data(meteo_tuple):
            str(meteo_tuple[5])+" km/h "
 
 
+def get_image_temps(meteo_tuple):
+    image_path = "./icones/"+meteo_tuple[6]+".gif"
+    photo = tkinter.PhotoImage(file=image_path)
+    return photo
+
+
 def click():
     entered_text = entrée.get()
     output.delete(0.0, tkinter.END)
     try:
         meteo_raw = get_weather_data(int(entered_text))
         texte_a_afficher = mise_en_forme_data(meteo_raw)
+        image_a_afficher = get_image_temps(meteo_raw)
     except:
         texte_a_afficher = "Code postal non valide"
+        image_a_afficher = ""
     output.insert(tkinter.END, texte_a_afficher)
+    label = tkinter.Label(image=image_a_afficher)
+    label.image = image_a_afficher  # keep a reference!
+    label.grid(row=2, column=0)
 
 
 window = tkinter.Tk()
@@ -56,6 +68,8 @@ entrée = tkinter.Entry(window, width=20, bg="white")
 entrée.grid(row=1, column=0)
 buttonName = tkinter.Button(window, text="Ok",  width=6, command=click)
 buttonName.grid(row=1, column=1)
-output = tkinter.Text(window, width=65, height=10, wrap='word', background='white')
-output.grid(row=5, column=0, columnspan=3)
+output_image = tkinter.Canvas(window, width=60, height=60, background='white')
+output_image.grid(row=2, column=0)
+output = tkinter.Text(window, width=50, height=10, wrap='word', background='white')
+output.grid(row=3, column=0, columnspan=3)
 window.mainloop()
